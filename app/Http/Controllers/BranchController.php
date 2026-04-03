@@ -7,10 +7,11 @@ use App\Http\Requests\DeleteRequest;
 use App\Http\Resources\BranchResource;
 use App\Models\Tenant\Branch;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $branch = Branch::with(['manager', 'departments', 'departments.manager', 'departments.children', 'departments.childrenRecursive', 'departments.branch', 'departments.parent', 'departments.users'])->get();
 
