@@ -8,16 +8,21 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Tenant\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProjectController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $projects = Project::with([
+            'users',
             'sprints',
             'sprints.stages',
             'sprints.stages.tasks',
             'sprints.stages.tasks.assignedBy',
+            'sprints.stages.tasks.users',
             'sprints.stages.tasks.sprintStage',
         ])
             ->orderByDesc('id')
@@ -49,11 +54,39 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->validated());
 
+        $sprint = $project->sprints()->create([
+            'name' => 'المرحلة الأساسية',
+            'start_date' => $project->start_date,
+            'end_date' => $project->end_date,
+        ]);
+
+        $sprint->stages()->createMany(
+            [
+                [
+                    'order' => 1,
+                    'name' => 'قيد الانتظار',
+                ],
+                [
+                    'order' => 2,
+                    'name' => 'قيد التنفيذ',
+                ],
+                [
+                    'order' => 3,
+                    'name' => 'قيد المراجعة',
+                ],
+                [
+                    'order' => 4,
+                    'name' => 'مكتملة',
+                ],
+            ]
+        );
+
         $project->load([
             'sprints',
             'sprints.stages',
             'sprints.stages.tasks',
             'sprints.stages.tasks.assignedBy',
+            'sprints.stages.tasks.users',
             'sprints.stages.tasks.sprintStage',
         ]);
 
@@ -66,6 +99,8 @@ class ProjectController extends Controller
     public function show(string $id): JsonResponse
     {
         $project = Project::with([
+            'media',
+            'users',
             'sprints',
             'sprints.stages',
             'sprints.stages.tasks',
@@ -107,5 +142,53 @@ class ProjectController extends Controller
         return response()->json([
             'message' => trans('crud.deleted'),
         ], 200);
+    }
+
+    public function uploadFiles(Request $request, string $id): JsonResponse
+    {
+        $project = Project::findOrFail($id);
+
+        $validated = $request->validate([
+            'files' => ['required', 'array'],
+            'files.*' => ['file', 'max:10240'],
+        ]);
+
+        foreach ($validated['files'] as $file) {
+            $project
+                ->addMedia($file)
+                ->toMediaCollection('project_files');
+        }
+
+        return response()->json([
+            'message' => trans('crud.created'),
+        ], 201);
+    }
+
+    public function deleteFile(DeleteRequest $request, string $id): JsonResponse
+    {
+        $project = Project::findOrFail($id);
+
+        $mediaId = $request->input('ids')[0];
+
+        $media = $project->media()
+            ->where('collection_name', 'project_files')
+            ->findOrFail($mediaId);
+
+        $media->delete();
+
+        return response()->json([
+            'message' => trans('crud.deleted'),
+        ]);
+    }
+
+    public function downloadFile(string $projectId, string $mediaId): BinaryFileResponse
+    {
+        $project = Project::findOrFail($projectId);
+
+        $media = $project->media()
+            ->where('collection_name', 'project_files')
+            ->findOrFail($mediaId);
+
+        return response()->download($media->getPath(), $media->file_name);
     }
 }

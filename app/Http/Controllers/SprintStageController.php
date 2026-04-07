@@ -18,6 +18,7 @@ class SprintStageController extends Controller
             'tasks',
             'tasks.assignedBy',
             'tasks.sprintStage',
+            'tasks.users'
         ])
             ->orderBy('order')
             ->get();
@@ -51,6 +52,7 @@ class SprintStageController extends Controller
             'tasks',
             'tasks.assignedBy',
             'tasks.sprintStage',
+            'tasks.users'
         ])->findOrFail($id);
 
         return response()->json([

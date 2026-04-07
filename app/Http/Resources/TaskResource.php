@@ -18,7 +18,7 @@ class TaskResource extends JsonResource
             'priority' => $this->priority,
             'assigned_by' => $this->assigned_by,
 
-            'start_date' => $this->start_date?->format('Y-m-d H:i:s'),
+            'start_date' => $this->start_date,
             'due_date' => $this->due_date?->format('Y-m-d H:i:s'),
             'end_date' => $this->end_date?->format('Y-m-d H:i:s'),
 
@@ -35,6 +35,10 @@ class TaskResource extends JsonResource
                     'full_name' => trim(($this->assignedBy->first_name ?? '') . ' ' . ($this->assignedBy->last_name ?? '')),
                     'email' => $this->assignedBy->email,
                 ];
+            }),
+
+            'users' => $this->whenLoaded('users', function () {
+                return UserResource::collection($this->users);
             }),
 
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

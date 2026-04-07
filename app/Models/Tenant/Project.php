@@ -2,10 +2,16 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model
+class Project extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'name',
         'description',
@@ -22,6 +28,11 @@ class Project extends Model
     public function sprints()
     {
         return $this->hasMany(Sprint::class)->orderByDesc('id');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
     }
 
     public function getStatusAttribute(): string
@@ -55,5 +66,10 @@ class Project extends Model
         }
 
         return $isLate ? 'late' : 'in_progress';
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('project_files');
     }
 }

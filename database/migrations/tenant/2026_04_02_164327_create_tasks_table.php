@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sprint_stage_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('order');
             $table->enum('priority', ['low', 'medium', 'high']);
 

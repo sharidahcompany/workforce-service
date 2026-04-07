@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\TaskController;
@@ -23,17 +24,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocaleFromHeader::class])->group(function () {
 
     Route::middleware('tenant.jwt')->group(function () {
-        Route::get('test', function () {
-            return response()->json([
-                'user' => auth('api')->user(),
-                'check' => auth('api')->check(),
-            ]);
-        })->middleware([
-            InitializeTenantFromHeader::class,
-            SetLocaleFromHeader::class,
-            'tenant.jwt',
-        ]);
-
         // Organization Sturcture
         Route::delete('visions', [VisionController::class, 'destroy']);
         Route::apiResource('visions', VisionController::class);
@@ -53,7 +43,15 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
         // Project Management
         Route::delete('projects', [ProjectController::class, 'destroy']);
+        Route::post('projects/{project}/users', [ProjectUserController::class, 'store']);
+        Route::put('projects/{project}/users', [ProjectUserController::class, 'update']);
+        Route::delete('projects/{project}/users', [ProjectUserController::class, 'destroy']);
+        Route::post('projects/{project}/files', [ProjectController::class, 'uploadFiles']);
+        Route::delete('projects/{project}/files/{mediaId}', [ProjectController::class, 'deleteFile']);
+        Route::get('projects/{projectId}/files/{mediaId}', [ProjectController::class, 'downloadFile']);
         Route::apiResource('projects', ProjectController::class);
+
+        Route::post('sprints/{sprint}/stages/reorder', [SprintController::class, 'reorder']);
 
         Route::delete('sprints', [SprintController::class, 'destroy']);
         Route::apiResource('sprints', SprintController::class);
@@ -61,7 +59,9 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::delete('stages', [SprintStage::class, 'destroy']);
         Route::apiResource('stages', SprintStage::class);
 
+
         Route::delete('tasks', [TaskController::class, 'destroy']);
+        Route::post('tasks/{task}/move', [TaskController::class, 'move']);
         Route::apiResource('tasks', TaskController::class);
 
         Route::prefix('tasks/{task}')->group(function () {
