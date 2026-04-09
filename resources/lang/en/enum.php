@@ -28,4 +28,20 @@ return [
     'REVERSE_CHARGE' => 'Reverse Charge',
     'PURCHASES' => 'Purchases',
     'SALES' => 'Sales',
+    // status
+    'scheduled' => 'Scheduled',
+    'canceled' => 'Canceled',
+    'rescheduled' => 'Rescheduled',
+    'accepted' => 'Accepted',
+    'rejected' => 'Rejected',
+
+    // type
+    'on_site' => 'On Site',
+    'online' => 'Online',
+
+    'pending' => 'Pending',
+    'present' => 'Present',
+    'late' => 'Late',
+    'absent' => 'Absent',
+    'missed_checkout' => 'Missed Checkout',
 ];

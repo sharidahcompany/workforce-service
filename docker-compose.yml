@@ -66,6 +66,24 @@ services:
     networks:
       - ceo_network
 
+  workforce-scheduler:
+    image: ghcr.io/sharidahcompany/workforce-service:latest
+    container_name: workforce-scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+    volumes:
+      - workforce_storage:/var/www/storage
+      - workforce_cache:/var/www/bootstrap/cache
+    networks:
+      - ceo_network
+    depends_on:
+      - workforce-service
+      - workforce-mysql
+    command: php artisan schedule:work
+
 networks:
   ceo_network:
     external: true

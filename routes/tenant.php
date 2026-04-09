@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AnnualVacationController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BuffetController;
 use App\Http\Controllers\BuffetItemController;
@@ -9,9 +11,16 @@ use App\Http\Controllers\BuffetOrderController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GoalController;
+use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobInterviewController;
+use App\Http\Controllers\JobPostController;
+use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -40,6 +49,40 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         // HR
         Route::delete('employees', [UserController::class, 'destroy']);
         Route::apiResource('employees', UserController::class);
+
+        Route::delete('jobs', [JobController::class, 'destroy']);
+        Route::apiResource('jobs', JobController::class);
+
+        Route::delete('job-posts', [JobPostController::class, 'destroy']);
+        Route::apiResource('job-posts', JobPostController::class);
+
+        Route::delete('job-applications', [JobApplicationController::class, 'destroy']);
+        Route::apiResource('job-applications', JobApplicationController::class);
+
+        Route::delete('interviews', [JobInterviewController::class, 'destroy']);
+        Route::apiResource('interviews', JobInterviewController::class);
+
+        Route::delete('shifts', [ShiftController::class, 'destroy']);
+        Route::post('shifts/{id}/assign-users', [ShiftController::class, 'assignUsers']);
+        Route::put('shifts/{id}/sync-users', [ShiftController::class, 'syncUsers']);
+        Route::delete('shifts/{id}/remove-users', [ShiftController::class, 'removeUsers']);
+        Route::apiResource('shifts', ShiftController::class);
+
+        Route::delete('annual-vacations', [AnnualVacationController::class, 'destroy']);
+        Route::apiResource('annual-vacations', AnnualVacationController::class);
+
+        Route::delete('holidays', [HolidayController::class, 'destroy']);
+        Route::apiResource('holidays', HolidayController::class);
+
+        Route::delete('missions', [MissionController::class, 'destroy']);
+        Route::apiResource('missions', MissionController::class);
+
+        Route::post('attendances/{id}/check-in', [AttendanceController::class, 'checkIn']);
+        Route::post('attendances/{id}/check-out', [AttendanceController::class, 'checkOut']);
+        Route::delete('attendances', [AttendanceController::class, 'destroy']);
+        Route::apiResource('attendances', AttendanceController::class);
+
+
 
         // Project Management
         Route::delete('projects', [ProjectController::class, 'destroy']);

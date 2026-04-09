@@ -32,4 +32,20 @@ return [
     'REVERSE_CHARGE' => 'احتساب عكسي',
     'PURCHASES' => 'مشتريات',
     'SALES' => 'مبيعات',
+    // status
+    'scheduled' => 'مجدول',
+    'canceled' => 'ملغي',
+    'rescheduled' => 'معاد جدولته',
+    'accepted' => 'مقبول',
+    'rejected' => 'مرفوض',
+
+    // type
+    'on_site' => 'حضوري',
+    'online' => 'عن بُعد',
+
+    'pending' => 'قيد الانتظار',
+    'present' => 'حاضر',
+    'late' => 'متأخر',
+    'absent' => 'غائب',
+    'missed_checkout' => 'لم يسجل الانصراف',
 ];

@@ -6,7 +6,9 @@ namespace App\Models\Tenant\User;
 
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Department;
+use App\Models\Tenant\Mission;
 use App\Models\Tenant\Project;
+use App\Models\Tenant\Shift;
 use App\Models\Tenant\Task;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -114,5 +116,16 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class);
+    }
+
+    public function shifts(): BelongsToMany
+    {
+        return $this->belongsToMany(Shift::class, 'shift_user');
+    }
+
+    public function missions(): BelongsToMany
+    {
+        return $this->belongsToMany(Mission::class, 'mission_user')
+            ->withTimestamps();
     }
 }
