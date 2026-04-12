@@ -2,64 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\ScholarshipRequestRequest;
+use App\Http\Resources\ScholarshipRequestResource;
 use App\Models\Tenant\ScholarshipRequest;
+use App\Services\QueryBuilderService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ScholarshipRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(private QueryBuilderService $queryBuilder) {}
+
+    public function index(Request $request): JsonResponse
     {
-        //
+        $query = ScholarshipRequest::query()->with([
+            'user',
+            'scholarship',
+        ]);
+
+        $result = $this->queryBuilder->applyQuery($request, $query);
+
+        return response()->json([
+            'data' => ScholarshipRequestResource::collection($result),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(ScholarshipRequestRequest $request): JsonResponse
     {
-        //
+        $scholarshipRequest = ScholarshipRequest::create($request->validated());
+
+        $scholarshipRequest->load([
+            'user',
+            'scholarship',
+        ]);
+
+        return response()->json([
+            'message' => trans('crud.created'),
+            'data' => new ScholarshipRequestResource($scholarshipRequest),
+        ], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(string $id): JsonResponse
     {
-        //
+        $scholarshipRequest = ScholarshipRequest::with([
+            'user',
+            'scholarship',
+        ])->findOrFail($id);
+
+        return response()->json([
+            'data' => new ScholarshipRequestResource($scholarshipRequest),
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ScholarshipRequest $scholarshipRequest)
+    public function update(ScholarshipRequestRequest $request, string $id): JsonResponse
     {
-        //
+        $scholarshipRequest = ScholarshipRequest::findOrFail($id);
+        $scholarshipRequest->update($request->validated());
+
+        $scholarshipRequest->load([
+            'user',
+            'scholarship',
+        ]);
+
+        return response()->json([
+            'message' => trans('crud.updated'),
+            'data' => new ScholarshipRequestResource($scholarshipRequest),
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ScholarshipRequest $scholarshipRequest)
+    public function destroy(DeleteRequest $request): JsonResponse
     {
-        //
-    }
+        ScholarshipRequest::whereIn('id', $request->ids)->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ScholarshipRequest $scholarshipRequest)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ScholarshipRequest $scholarshipRequest)
-    {
-        //
+        return response()->json([
+            'message' => trans('crud.deleted'),
+        ]);
     }
 }

@@ -12,7 +12,7 @@ class ScholarshipRequestRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,18 @@ class ScholarshipRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => ['required', 'exists:users,id'],
+            'scholarship_id' => ['nullable', 'exists:scholarships,id'],
+
+            'title' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+
+            'price' => ['nullable', 'numeric', 'min:0'],
+            'discount_percentage' => ['nullable', 'numeric', 'min:0', 'max:100'],
+
+            'duration' => ['nullable', 'string', 'max:255'],
+
+            'status' => ['required'],
         ];
     }
 }

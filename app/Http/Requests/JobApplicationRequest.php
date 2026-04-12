@@ -20,13 +20,10 @@ class JobApplicationRequest extends FormRequest
         $isPost = $this->isMethod('post');
 
         return [
-            'job_post_id' => ['required', 'integer', 'exists:job_posts,id'],
+            'job_post_id' => ['nullable', 'integer', 'exists:job_posts,id'],
             'user_id' => [$isPost ? 'required' : 'sometimes', 'integer', 'exists:users,id'],
             'status' => ['nullable', Rule::in(['pending', 'accepted', 'rejected'])],
-            'full_name' => ['required', 'string', 'max:255'],
-            'id_number' => ['required', 'string', 'max:255'],
-            'nationality' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
+            'file' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
         ];
     }
 }

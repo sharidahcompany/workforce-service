@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ScholarshipRequestResource extends JsonResource
+class ScholarshipResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,28 +15,23 @@ class ScholarshipRequestResource extends JsonResource
     public function toArray(Request $request): array
     {
         $price = (float) $this->price;
-        $percentage = (float) $this->discount_percentage;
-
-        $discountAmount = $price * $percentage / 100;
+        $discountPercentage = (float) $this->discount;
+        $discountAmount = $price * $discountPercentage / 100;
         $finalPrice = max($price - $discountAmount, 0);
 
         return [
             'id' => $this->id,
-
-            'user' => $this->whenLoaded('user'),
-            'scholarship' => $this->whenLoaded('scholarship'),
-
             'title' => $this->title,
             'description' => $this->description,
 
             'price' => $price,
-            'discount_percentage' => $percentage,
+
+            'discount_percentage' => $discountPercentage,
             'discount_amount' => $discountAmount,
             'final_price' => $finalPrice,
 
             'duration' => $this->duration,
-
-            'status' => $this->status,
+            'is_active' => $this->is_active,
 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

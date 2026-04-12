@@ -8,6 +8,7 @@ use App\Http\Resources\ExperienceResource;
 use App\Models\Tenant\Experience;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ExperienceController extends Controller
@@ -16,7 +17,7 @@ class ExperienceController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $experiences = Experience::query()->with('jobApplication');
+        $experiences = Experience::query()->with('user');
 
         $result = $this->queryBuilder->applyQuery($request, $experiences);
 
@@ -27,32 +28,40 @@ class ExperienceController extends Controller
 
     public function store(ExperienceRequest $request): JsonResponse
     {
-        $experience = Experience::create($request->validated());
-        $experience->load('jobApplication');
+        $validated = $request->validated();
+        $userId = $validated['user_id'];
+        $experiences = $validated['experiences'];
 
-        return response()->json([
-            'message' => trans('crud.created'),
-            'data' => new ExperienceResource($experience),
-        ], 201);
+        $incomingIds = collect($experiences)->pluck('id')->filter()->toArray();
+
+        return DB::transaction(function () use ($userId, $experiences, $incomingIds) {
+
+            Experience::where('user_id', $userId)
+                ->whereNotIn('id', $incomingIds)
+                ->delete();
+
+            $processedExperiences = collect();
+
+            foreach ($experiences as $data) {
+                $experience = Experience::updateOrCreate(
+                    ['id' => $data['id'] ?? null, 'user_id' => $userId],
+                    $data
+                );
+                $processedExperiences->push($experience);
+            }
+
+            return response()->json([
+                'message' => trans('crud.updated'),
+                'data' => ExperienceResource::collection($processedExperiences->load('user')),
+            ], 200);
+        });
     }
 
     public function show(string $id): JsonResponse
     {
-        $experience = Experience::with('jobApplication')->findOrFail($id);
+        $experience = Experience::with('user')->findOrFail($id);
 
         return response()->json([
-            'data' => new ExperienceResource($experience),
-        ]);
-    }
-
-    public function update(ExperienceRequest $request, string $id): JsonResponse
-    {
-        $experience = Experience::findOrFail($id);
-        $experience->update($request->validated());
-        $experience->load('jobApplication');
-
-        return response()->json([
-            'message' => trans('crud.updated'),
             'data' => new ExperienceResource($experience),
         ]);
     }

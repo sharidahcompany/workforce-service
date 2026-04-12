@@ -12,7 +12,7 @@ class QueryBuilderService
         $filters = $request->input('filters', []);
         $sortBy = $request->input('sort_by', 'id');
         $sortDir = $request->input('sort_dir', 'desc');
-        $perPage = min((int)$request->input('per_page', 100), 500);
+        $perPage = min((int)$request->input('per_page', 50), 500);
 
         // Get only allowed columns (fillable)
         $model = $query->getModel();
@@ -28,6 +28,10 @@ class QueryBuilderService
         }
 
         // Filtering
+        if (is_string($filters)) {
+            $filters = json_decode($filters, true) ?? [];
+        }
+
         foreach ($filters as $column => $condition) {
             if (!in_array($column, $allowedColumns)) {
                 abort(422, "Filtering by column [$column] is not allowed.");

@@ -8,18 +8,21 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BuffetController;
 use App\Http\Controllers\BuffetItemController;
 use App\Http\Controllers\BuffetOrderController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\JobApplicationController;
-use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobInterviewController;
 use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ScholarshipController;
+use App\Http\Controllers\ScholarshipRequestController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\TaskController;
@@ -50,8 +53,8 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::delete('employees', [UserController::class, 'destroy']);
         Route::apiResource('employees', UserController::class);
 
-        Route::delete('jobs', [JobController::class, 'destroy']);
-        Route::apiResource('jobs', JobController::class);
+        Route::delete('jobs', [CareerController::class, 'destroy']);
+        Route::apiResource('jobs', CareerController::class);
 
         Route::delete('job-posts', [JobPostController::class, 'destroy']);
         Route::apiResource('job-posts', JobPostController::class);
@@ -82,7 +85,14 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::delete('attendances', [AttendanceController::class, 'destroy']);
         Route::apiResource('attendances', AttendanceController::class);
 
+        Route::apiResource('scholarships', ScholarshipController::class);
+        Route::delete('scholarships', [ScholarshipController::class, 'destroy']);
 
+        Route::apiResource('scholarship-requests', ScholarshipRequestController::class);
+        Route::delete('scholarship-requests', [ScholarshipRequestController::class, 'destroy']);
+
+        Route::apiResource('experiences', ExperienceController::class);
+        Route::delete('experiences', [ExperienceController::class, 'destroy']);
 
         // Project Management
         Route::delete('projects', [ProjectController::class, 'destroy']);

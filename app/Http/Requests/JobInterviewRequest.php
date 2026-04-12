@@ -20,7 +20,7 @@ class JobInterviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job_application_id' => ['required', 'integer', 'exists:job_applications,id'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
             'interviewer_id' => ['nullable', 'integer', 'exists:users,id'],
 
             'interview_type' => [

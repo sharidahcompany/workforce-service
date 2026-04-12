@@ -8,15 +8,14 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Tenant\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProjectController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $projects = Project::with([
+            'media',
             'users',
             'sprints',
             'sprints.stages',

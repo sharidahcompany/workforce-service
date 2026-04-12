@@ -16,7 +16,7 @@ class JobInterviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'job_application_id' => $this->job_application_id,
+            'user_id' => $this->user_id,
             'interviewer_id' => $this->interviewer_id,
             'interview_type' => $this->interview_type?->value ?? $this->interview_type,
             'scheduled_at' => $this->scheduled_at,
@@ -29,7 +29,7 @@ class JobInterviewResource extends JsonResource
             'overall_score' => $this->overall_score,
             'hr_notes' => $this->hr_notes,
             'status' => $this->status?->value ?? $this->status,
-            'job_application' => new JobApplicationResource($this->whenLoaded('jobApplication')),
+            'user' => new JobApplicationResource($this->whenLoaded('user')),
             'interviewer' => new UserResource($this->whenLoaded('interviewer')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

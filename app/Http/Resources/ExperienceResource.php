@@ -16,14 +16,14 @@ class ExperienceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'job_application_id' => $this->job_application_id,
+            'user_id' => $this->user_id,
             'title' => $this->title,
             'organization' => $this->organization,
             'description' => $this->description,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'type' => $this->type,
-            'job_application' => new JobApplicationResource($this->whenLoaded('jobApplication')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

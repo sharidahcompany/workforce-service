@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -9,7 +10,7 @@ class Experience extends Model
 {
 
     protected $fillable = [
-        'job_application_id',
+        'user_id',
         'title',
         'organization',
         'description',
@@ -23,8 +24,8 @@ class Experience extends Model
         'end_date' => 'datetime',
     ];
 
-    public function jobApplication(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(JobApplication::class);
+        return $this->belongsTo(User::class);
     }
 }

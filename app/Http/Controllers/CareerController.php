@@ -3,33 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteRequest;
-use App\Http\Requests\JobRequest;
-use App\Http\Resources\JobResource;
-use App\Models\Tenant\Job;
+use App\Http\Requests\CareerRequest;
+use App\Http\Resources\CareerResource;
+use App\Models\Tenant\Career;
 
-class JobController extends Controller
+class CareerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $job = Job::all();
+        $Career = Career::all();
 
-        return response()->json(['data' => JobResource::collection($job)]);
+        return response()->json(['data' => CareerResource::collection($Career)]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(JobRequest $request)
+    public function store(CareerRequest $request)
     {
         $validated = $request->validated();
 
-        $job = Job::create($validated);
+        $Career = Career::create($validated);
 
         return response()->json([
-            'data' => new JobResource($job),
+            'data' => new CareerResource($Career),
             'message' => trans('crud.created'),
         ], 201);
     }
@@ -39,22 +39,22 @@ class JobController extends Controller
      */
     public function show(string $id)
     {
-        $job = Job::findOrFail($id);
+        $Career = Career::findOrFail($id);
 
-        return response()->json(['data' => new JobResource($job)], 200);
+        return response()->json(['data' => new CareerResource($Career)], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(jobRequest $request, string $id)
+    public function update(CareerRequest $request, string $id)
     {
-        $job = Job::findOrFail($id);
+        $Career = Career::findOrFail($id);
 
-        $job->update($request->validated());
+        $Career->update($request->validated());
 
         return response()->json([
-            'data' => new JobResource($job),
+            'data' => new CareerResource($Career),
             'message' => trans('crud.updated'),
         ], 200);
     }
@@ -73,7 +73,7 @@ class JobController extends Controller
         }
 
         try {
-            Job::whereIn('id', $ids)->delete();
+            Career::whereIn('id', $ids)->delete();
         } catch (\Throwable $exception) {
             return response()->json([
                 'message' => trans('crud.delete.error'),

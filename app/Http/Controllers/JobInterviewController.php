@@ -17,7 +17,7 @@ class JobInterviewController extends Controller
     public function index(Request $request): JsonResponse
     {
         $interviews = JobInterview::query()->with([
-            'jobApplication',
+            'user',
             'interviewer',
         ]);
 
@@ -32,7 +32,7 @@ class JobInterviewController extends Controller
     {
         $interview = JobInterview::create($request->validated());
         $interview->load([
-            'jobApplication',
+            'user',
             'interviewer',
         ]);
 
@@ -45,7 +45,7 @@ class JobInterviewController extends Controller
     public function show(string $id): JsonResponse
     {
         $interview = JobInterview::with([
-            'jobApplication',
+            'user',
             'interviewer',
         ])->findOrFail($id);
 
@@ -59,7 +59,7 @@ class JobInterviewController extends Controller
         $interview = JobInterview::findOrFail($id);
         $interview->update($request->validated());
         $interview->load([
-            'jobApplication',
+            'user',
             'interviewer',
         ]);
 

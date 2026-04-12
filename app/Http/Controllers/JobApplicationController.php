@@ -35,7 +35,11 @@ class JobApplicationController extends Controller
         $data = $request->validated();
         $data['user_id'] = Auth::id();
         $jobApplication = JobApplication::create($data);
-        $jobApplication->load(['jobPost', 'user', 'experiences']);
+        $jobApplication->load(['jobPost', 'user']);
+
+        if ($request->hasFile('file')) {
+            $jobApplication->addMediaFromRequest('file')->toMediaCollection('cv');
+        }
 
         return response()->json([
             'message' => trans('crud.created'),
@@ -48,8 +52,7 @@ class JobApplicationController extends Controller
         $jobApplication = JobApplication::with([
             'jobPost',
             'user',
-            'experiences',
-            'interviews',
+
         ])->findOrFail($id);
 
         return response()->json([
@@ -61,7 +64,11 @@ class JobApplicationController extends Controller
     {
         $jobApplication = JobApplication::findOrFail($id);
         $jobApplication->update($request->validated());
-        $jobApplication->load(['jobPost', 'user', 'experiences']);
+        $jobApplication->load(['jobPost', 'user']);
+
+        if ($request->hasFile('file')) {
+            $jobApplication->addMediaFromRequest('file')->toMediaCollection('cv');
+        }
 
         return response()->json([
             'message' => trans('crud.updated'),
@@ -71,7 +78,11 @@ class JobApplicationController extends Controller
 
     public function destroy(DeleteRequest $request): JsonResponse
     {
-        JobApplication::whereIn('id', $request->ids)->delete();
+        $jobApplications = JobApplication::whereIn('id', $request->ids)->get();
+
+        foreach ($jobApplications as $jobApplication) {
+            $jobApplication->delete();
+        }
 
         return response()->json([
             'message' => trans('crud.deleted'),

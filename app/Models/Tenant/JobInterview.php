@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class JobInterview extends Model
 {
     protected $fillable = [
-        'job_application_id',
+        'user_id',
         'interviewer_id',
         'interview_type',
         'scheduled_at',
@@ -32,9 +32,9 @@ class JobInterview extends Model
         'status' => InterviewStatus::class,
     ];
 
-    public function jobApplication(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(JobApplication::class);
+        return $this->belongsTo(User::class);
     }
 
     public function interviewer(): BelongsTo

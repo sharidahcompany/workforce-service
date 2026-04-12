@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\UserCreated;
 use App\Models\Tenant\Branch;
+use App\Models\Tenant\Career;
 use App\Models\Tenant\User\User;
-use Illuminate\Support\Facades\Log;
 
 class CreateUser
 {
@@ -38,6 +38,13 @@ class CreateUser
         ]);
 
         $user['branch_id'] = $branch->id;
+        $user->save();
+
+        $job = Career::create([
+            'title' => 'الرئيس'
+        ]);
+
+        $user['job_id'] = $job->id;
         $user->save();
     }
 }

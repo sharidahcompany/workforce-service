@@ -5,7 +5,10 @@ namespace App\Models\Tenant\User;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Tenant\Branch;
+use App\Models\Tenant\Career;
 use App\Models\Tenant\Department;
+use App\Models\Tenant\Experience;
+use App\Models\Tenant\JobApplication;
 use App\Models\Tenant\Mission;
 use App\Models\Tenant\Project;
 use App\Models\Tenant\Shift;
@@ -35,6 +38,11 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         'id',
         'first_name',
         'last_name',
+        'full_name',
+        'id_number',
+        'nationality',
+        'date_of_birth',
+        'address',
         'phone',
         'email',
         'branch_id',
@@ -60,6 +68,8 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
+
         ];
     }
 
@@ -127,5 +137,20 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     {
         return $this->belongsToMany(Mission::class, 'mission_user')
             ->withTimestamps();
+    }
+
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Career::class, 'job_id');
+    }
+
+    public function jobApplications(): BelongsToMany
+    {
+        return $this->belongsToMany(JobApplication::class);
+    }
+
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
     }
 }

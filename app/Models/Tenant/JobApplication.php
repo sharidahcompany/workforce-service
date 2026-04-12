@@ -6,17 +6,17 @@ use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class JobApplication extends Model
+class JobApplication extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'job_post_id',
         'user_id',
         'status',
-        'full_name',
-        'id_number',
-        'nationality',
-        'address',
     ];
 
     public function jobPost(): BelongsTo
@@ -29,13 +29,10 @@ class JobApplication extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function experiences(): HasMany
-    {
-        return $this->hasMany(Experience::class);
-    }
 
-    public function interviews(): HasMany
+
+    public function registerMediaCollections(): void
     {
-        return $this->hasMany(JobInterview::class);
+        $this->addMediaCollection('cv')->singleFile();
     }
 }

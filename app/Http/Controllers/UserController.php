@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::query()->with('branch', 'branches', 'departments');
+        $users = User::query()->with('branch', 'branches', 'departments', 'job');
 
         $result = $this->queryBuilder->applyQuery($request, $users);
 
@@ -40,7 +40,7 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        $user = User::with('branch')->find($id);
+        $user = User::with('branch', 'job', 'experiences')->find($id);
 
         return response()->json(['data' => new UserResource($user)], 200);
     }

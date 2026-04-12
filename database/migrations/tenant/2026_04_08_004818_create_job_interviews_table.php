@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('job_interviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('job_application_id')->constrained('job_applications')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('interviewer_id')->nullable()->constrained('users')->nullOnDelete();
             $table->enum('interview_type', array_map(fn($case) => $case->value, InterviewType::cases()));
             $table->timestamp('scheduled_at');
