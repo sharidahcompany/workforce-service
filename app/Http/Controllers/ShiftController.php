@@ -31,9 +31,13 @@ class ShiftController extends Controller
     {
         $shift = Shift::create($request->validated());
 
+        if ($request->has('user_ids')) {
+            $shift->users()->sync($request->user_ids);
+        }
+
         return response()->json([
             'message' => trans('crud.created'),
-            'data' => new ShiftResource($shift),
+            'data' => new ShiftResource($shift->load('users')),
         ], 201);
     }
 
@@ -51,9 +55,13 @@ class ShiftController extends Controller
         $shift = Shift::findOrFail($id);
         $shift->update($request->validated());
 
+        if ($request->has('user_ids')) {
+            $shift->users()->sync($request->user_ids);
+        }
+
         return response()->json([
             'message' => trans('crud.updated'),
-            'data' => new ShiftResource($shift),
+            'data' => new ShiftResource($shift->load('users')),
         ]);
     }
 

@@ -33,10 +33,12 @@ class ExperienceController extends Controller
         $experiences = $validated['experiences'];
 
         $incomingIds = collect($experiences)->pluck('id')->filter()->toArray();
+        $types = collect($experiences)->pluck('type')->unique()->toArray();
 
-        return DB::transaction(function () use ($userId, $experiences, $incomingIds) {
+        return DB::transaction(function () use ($userId, $experiences, $incomingIds, $types) {
 
             Experience::where('user_id', $userId)
+                ->whereIn('type', $types)
                 ->whereNotIn('id', $incomingIds)
                 ->delete();
 
@@ -44,15 +46,19 @@ class ExperienceController extends Controller
 
             foreach ($experiences as $data) {
                 $experience = Experience::updateOrCreate(
-                    ['id' => $data['id'] ?? null, 'user_id' => $userId],
+                    [
+                        'id' => $data['id'] ?? null,
+                        'user_id' => $userId
+                    ],
                     $data
                 );
+
                 $processedExperiences->push($experience);
             }
 
             return response()->json([
                 'message' => trans('crud.updated'),
-                'data' => ExperienceResource::collection($processedExperiences->load('user')),
+                'data' => ExperienceResource::collection($processedExperiences),
             ], 200);
         });
     }

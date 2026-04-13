@@ -2,7 +2,7 @@
 
 namespace App\Models\Tenant;
 
-use App\Enums\MissionStatus;
+use App\Enums\MissionApprovalStatus;
 use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +25,7 @@ class AttendancePermission extends Model
         'deduct_from_balance' => 'boolean',
         'start_datetime' => 'datetime',
         'end_datetime' => 'datetime',
-        'status' => MissionStatus::class,
+        'status' => MissionApprovalStatus::class,
     ];
 
     public function user(): BelongsTo

@@ -18,14 +18,12 @@ class MissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'approved_by' => ['nullable', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'start_datetime' => ['required', 'date'],
             'end_datetime' => ['required', 'date', 'after_or_equal:start_datetime'],
             'actual_start_datetime' => ['nullable', 'date'],
             'actual_end_datetime' => ['nullable', 'date', 'after_or_equal:actual_start_datetime'],
-            'created_by' => ['required', 'integer', 'exists:users,id'],
             'expense_amount' => ['nullable', 'numeric', 'min:0'],
 
             'assignee_ids' => ['nullable', 'array'],

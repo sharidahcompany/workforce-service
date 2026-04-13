@@ -24,9 +24,10 @@ class ShiftRequest extends FormRequest
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i'],
             'grace_period' => ['nullable', 'integer', 'min:0'],
-            'overtime_allowed' => ['nullable', 'boolean'],
             'overtime_rate' => ['nullable', 'numeric', 'min:0'],
             'deduction_rate' => ['nullable', 'numeric', 'min:0'],
+            'user_ids' => ['nullable', 'array'],
+            'user_ids.*' => ['integer', 'exists:users,id', 'distinct'],
         ];
     }
 

@@ -28,6 +28,9 @@ class MissionResource extends JsonResource
             'created_by_user' => new UserResource($this->whenLoaded('createdBy')),
             'expense_amount' => $this->expense_amount,
             'assignees' => UserResource::collection($this->whenLoaded('assignees')),
+            'assignee_ids' => $this->whenLoaded('assignees', function () {
+                return $this->assignees->pluck('id');
+            }),
             'status' => [
                 'value' => $this->status?->value,
                 'label' => $this->status?->label(),

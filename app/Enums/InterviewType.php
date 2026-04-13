@@ -10,8 +10,8 @@ enum InterviewType: string
     public function label(): string
     {
         return match ($this) {
-            self::ON_SITE => trans('enum.ON_SITE'),
-            self::ONLINE => trans('enum.ONLINE'),
+            self::ON_SITE => trans('enum.on_site'),
+            self::ONLINE => trans('enum.online'),
         };
     }
 

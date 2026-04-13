@@ -25,6 +25,8 @@ class Shift extends Model
         'overtime_allowed' => 'boolean',
         'overtime_rate' => 'decimal:2',
         'deduction_rate' => 'decimal:2',
+        'start_time' => 'datetime:H:i',
+        'end_time' => 'datetime:H:i',
     ];
 
 

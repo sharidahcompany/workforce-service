@@ -9,6 +9,7 @@ use App\Models\Tenant\Mission;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MissionController extends Controller
 {
@@ -35,6 +36,14 @@ class MissionController extends Controller
 
         $assigneeIds = $validated['assignee_ids'] ?? [];
         unset($validated['assignee_ids']);
+        $user = Auth::user();
+        $validated['created_by'] = $user->id;
+
+        if ($validated['approval_status'] === 'approved') {
+            $validated['approved_by'] = $user->id;
+        } else {
+            $validated['approved_by'] = null;
+        }
 
         $mission = Mission::create($validated);
         $mission->assignees()->sync($assigneeIds);
@@ -70,6 +79,15 @@ class MissionController extends Controller
 
         $assigneeIds = $validated['assignee_ids'] ?? [];
         unset($validated['assignee_ids']);
+
+        $user = Auth::user();
+        $validated['created_by'] = $user->id;
+
+        if ($validated['approval_status'] === 'approved') {
+            $validated['approved_by'] = $user->id;
+        } else {
+            $validated['approved_by'] = null;
+        }
 
         $mission = Mission::findOrFail($id);
         $mission->update($validated);
