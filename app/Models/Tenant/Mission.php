@@ -21,6 +21,8 @@ class Mission extends Model
         'actual_end_datetime',
         'created_by',
         'expense_amount',
+        'status',
+        'approval_status',
     ];
 
     protected $casts = [

@@ -17,13 +17,13 @@ class AttendancePermissionRequest extends FormRequest
 
     public function rules(): array
     {
+        $isPost = $this->isMethod('post');
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'approved_by' => ['nullable', 'integer', 'exists:users,id'],
             'deduct_from_balance' => ['nullable', 'boolean'],
             'reason' => ['nullable', 'string'],
-            'start_datetime' => ['required', 'date'],
-            'end_datetime' => ['required', 'date', 'after_or_equal:start_datetime'],
+            'start_datetime' => [$isPost ? 'required' : 'sometimes', 'date'],
+            'end_datetime' => [$isPost ? 'required' : 'sometimes', 'date', 'after_or_equal:start_datetime'],
             'status' => ['nullable', 'in:' . implode(',', MissionApprovalStatus::values())],
         ];
     }

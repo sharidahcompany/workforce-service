@@ -26,15 +26,15 @@ class ScholarshipRequestResource extends JsonResource
             'user' => $this->whenLoaded('user'),
             'scholarship' => $this->whenLoaded('scholarship'),
 
-            'title' => $this->title,
-            'description' => $this->description,
+            'title' => $this->title ?? $this->scholarship->title,
+            'description' => $this->description ?? $this->scholarship->description,
 
-            'price' => $price,
-            'discount_percentage' => $percentage,
-            'discount_amount' => $discountAmount,
-            'final_price' => $finalPrice,
+            'price' => $price ?? $this->scholarship->price,
+            'discount_percentage' => $percentage ?? $this->scholarship->discount_percentage,
+            'discount_amount' => $discountAmount ?? $this->scholarship->discount_amount,
+            'final_price' => $finalPrice ?? $this->scholarship->final_price,
 
-            'duration' => $this->duration,
+            'duration' => $this->duration ?? $this->scholarship->duration,
 
             'status' => $this->status,
 

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\ScholarshipRequest;
 use App\Http\Resources\ScholarshipResource;
 use App\Models\Tenant\Scholarship;
-use App\Models\Tenant\ScholarshipRequest;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

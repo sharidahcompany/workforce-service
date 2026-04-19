@@ -9,6 +9,7 @@ use App\Models\Tenant\AttendancePermission;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AttendancePermissionController extends Controller
 {
@@ -30,7 +31,12 @@ class AttendancePermissionController extends Controller
 
     public function store(AttendancePermissionRequest $request): JsonResponse
     {
-        $attendancePermission = AttendancePermission::create($request->validated());
+        $validated = $request->validated();
+
+        $validated['user_id'] = Auth::id();
+
+        $attendancePermission = AttendancePermission::create($validated);
+
         $attendancePermission->load([
             'user',
             'approvedBy',
@@ -57,7 +63,9 @@ class AttendancePermissionController extends Controller
     public function update(AttendancePermissionRequest $request, string $id): JsonResponse
     {
         $attendancePermission = AttendancePermission::findOrFail($id);
+
         $attendancePermission->update($request->validated());
+
         $attendancePermission->load([
             'user',
             'approvedBy',

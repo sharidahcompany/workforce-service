@@ -45,7 +45,7 @@ Schedule::call(function () {
                 }
             }
         });
-})->dailyAt('00:05');
+})->everyFiveSeconds();
 
 Schedule::call(function () {
     $currentTime = now();

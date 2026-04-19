@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\AnnualVacationController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendancePermissionController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BuffetController;
 use App\Http\Controllers\BuffetItemController;
@@ -84,6 +85,9 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::post('attendances/{id}/check-out', [AttendanceController::class, 'checkOut']);
         Route::delete('attendances', [AttendanceController::class, 'destroy']);
         Route::apiResource('attendances', AttendanceController::class);
+
+        Route::delete('attendance-permissions', [AttendancePermissionController::class, 'destroy']);
+        Route::apiResource('attendance-permissions', AttendancePermissionController::class);
 
         Route::apiResource('scholarships', ScholarshipController::class);
         Route::delete('scholarships', [ScholarshipController::class, 'destroy']);

@@ -15,7 +15,7 @@ class ScholarshipResource extends JsonResource
     public function toArray(Request $request): array
     {
         $price = (float) $this->price;
-        $discountPercentage = (float) $this->discount;
+        $discountPercentage = (float) $this->discount_percentage;
         $discountAmount = $price * $discountPercentage / 100;
         $finalPrice = max($price - $discountAmount, 0);
 
@@ -28,6 +28,7 @@ class ScholarshipResource extends JsonResource
 
             'discount_percentage' => $discountPercentage,
             'discount_amount' => $discountAmount,
+            'dicount_percentage' => $discountPercentage,
             'final_price' => $finalPrice,
 
             'duration' => $this->duration,

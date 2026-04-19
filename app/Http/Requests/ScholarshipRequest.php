@@ -21,7 +21,7 @@ class ScholarshipRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'discount' => ['required', 'numeric', 'min:0'],
+            'discount_percentage' => ['required', 'numeric', 'min:0'],
             'duration' => ['required', 'string', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
         ];

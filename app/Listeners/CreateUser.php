@@ -30,6 +30,8 @@ class CreateUser
         }
 
         $user = User::create($userData);
+
+        if($user->id === 1) {
         $branch = Branch::create([
             'name' => [
                 'en' => 'Headquarter',
@@ -46,5 +48,6 @@ class CreateUser
 
         $user['job_id'] = $job->id;
         $user->save();
+        }
     }
 }

@@ -34,7 +34,18 @@ class ScholarshipRequestRequest extends FormRequest
 
             'duration' => ['nullable', 'string', 'max:255'],
 
-            'status' => ['required'],
+            'status' => ['sometimes', 'in:pending,approved,rejected'],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'user_id' => $this->user()->id,
+            'status' => $this->status ?? 'pending',
+        ]);
     }
 }
