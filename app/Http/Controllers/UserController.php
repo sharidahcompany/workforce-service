@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::query()->with('branch', 'branches', 'departments', 'job');
+        $users = User::query()->with('branch', 'branches', 'departments', 'job','experiences');
 
         $result = $this->queryBuilder->applyQuery($request, $users);
 

@@ -37,7 +37,9 @@ class UserResource extends JsonResource
                 return DepartmentResource::collection($this->departments);
             }),
 
-            'experiences' => ExperienceResource::collection($this->experiences),
+            'experiences' => $this->whenLoaded('experiences', function () {
+                return ExperienceResource::collection($this->experiences);
+            }),
 
             'avatar' => $this->getFirstMediaUrl('avatar'),
 
