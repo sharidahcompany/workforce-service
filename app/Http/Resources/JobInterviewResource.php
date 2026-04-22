@@ -19,7 +19,7 @@ class JobInterviewResource extends JsonResource
             'user_id' => $this->user_id,
             'interviewer_id' => $this->interviewer_id,
             'interview_type' => $this->interview_type?->value ?? $this->interview_type,
-            'scheduled_at' => $this->scheduled_at,
+            'scheduled_at' => $this->scheduled_at->format('Y-m-d H:i:s'),
             'meeting_link' => $this->meeting_link,
             'location' => $this->location,
             'reschedule_reason' => $this->reschedule_reason,
@@ -33,8 +33,8 @@ class JobInterviewResource extends JsonResource
             'interview_type_label' => $this->interview_type?->label() ?? $this->interview_type,
             'user' => new UserResource($this->whenLoaded('user')),
             'interviewer' => new UserResource($this->whenLoaded('interviewer')),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }

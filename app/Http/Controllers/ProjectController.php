@@ -145,6 +145,7 @@ class ProjectController extends Controller
 
     public function uploadFiles(Request $request, string $id): JsonResponse
     {
+        
         $project = Project::findOrFail($id);
 
         $validated = $request->validate([

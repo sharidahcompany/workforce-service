@@ -26,6 +26,7 @@ use App\Http\Controllers\ScholarshipController;
 use App\Http\Controllers\ScholarshipRequestController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SprintController;
+use App\Http\Controllers\SprintStageController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisionController;
@@ -89,14 +90,14 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::delete('attendance-permissions', [AttendancePermissionController::class, 'destroy']);
         Route::apiResource('attendance-permissions', AttendancePermissionController::class);
 
-        Route::apiResource('scholarships', ScholarshipController::class);
         Route::delete('scholarships', [ScholarshipController::class, 'destroy']);
+        Route::apiResource('scholarships', ScholarshipController::class);
 
-        Route::apiResource('scholarship-requests', ScholarshipRequestController::class);
         Route::delete('scholarship-requests', [ScholarshipRequestController::class, 'destroy']);
+        Route::apiResource('scholarship-requests', ScholarshipRequestController::class);
 
-        Route::apiResource('experiences', ExperienceController::class);
         Route::delete('experiences', [ExperienceController::class, 'destroy']);
+        Route::apiResource('experiences', ExperienceController::class);
 
         // Project Management
         Route::delete('projects', [ProjectController::class, 'destroy']);
@@ -109,12 +110,11 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
         Route::apiResource('projects', ProjectController::class);
 
         Route::post('sprints/{sprint}/stages/reorder', [SprintController::class, 'reorder']);
-
         Route::delete('sprints', [SprintController::class, 'destroy']);
         Route::apiResource('sprints', SprintController::class);
 
-        Route::delete('stages', [SprintStage::class, 'destroy']);
-        Route::apiResource('stages', SprintStage::class);
+        Route::delete('stages', [SprintStageController::class, 'destroy']);
+        Route::apiResource('stages', SprintStageController::class);
 
 
         Route::delete('tasks', [TaskController::class, 'destroy']);
