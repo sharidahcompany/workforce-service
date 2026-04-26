@@ -7,9 +7,9 @@ services:
     restart: unless-stopped
     working_dir: /var/www
     volumes:
-      - /srv/ceo-app/microservices/workforce-service:/var/www
-      - /srv/ceo-app/microservices/workforce-service/storage:/var/www/storage
-      - /srv/ceo-app/microservices/workforce-service/bootstrap/cache:/var/www/bootstrap/cache
+      - .:/var/www
+      - ./storage:/var/www/storage
+      - ./bootstrap/cache:/var/www/bootstrap/cache
       - workforce_vendor:/var/www/vendor
 
     networks:
@@ -22,10 +22,10 @@ services:
     container_name: workforce-web
     restart: unless-stopped
     ports:
-      - "8012:80"
+      - "8002:80"
     volumes:
-      - /srv/ceo-app/microservices/workforce-service:/var/www
-      - /srv/ceo-app/microservices/workforce-service/nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - workforce-service
     networks:
@@ -39,9 +39,9 @@ services:
     restart: unless-stopped
     working_dir: /var/www
     volumes:
-      - /srv/ceo-app/microservices/workforce-service:/var/www
-      - /srv/ceo-app/microservices/workforce-service/storage:/var/www/storage
-      - /srv/ceo-app/microservices/workforce-service/bootstrap/cache:/var/www/bootstrap/cache
+      - .:/var/www
+      - ./storage:/var/www/storage
+      - ./bootstrap/cache:/var/www/bootstrap/cache
       - workforce_vendor:/var/www/vendor
     networks:
       - ceo_network
@@ -75,8 +75,9 @@ services:
       APP_ENV: production
       APP_DEBUG: "false"
     volumes:
-      - workforce_storage:/var/www/storage
-      - workforce_cache:/var/www/bootstrap/cache
+      - .:/var/www
+      - ./storage:/var/www/storage
+      - ./bootstrap/cache:/var/www/bootstrap/cache
     networks:
       - ceo_network
     depends_on:
@@ -86,7 +87,7 @@ services:
 
 networks:
   ceo_network:
-    external: true
+      external: true
 
 volumes:
   mysql_data:

@@ -35,19 +35,20 @@ class User extends Authenticatable implements HasMedia, JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'id',
+        'branch_id',
+        'department_id',
+        'career_id',
+        'email',
+        'phone',
+        'id_number',
         'first_name',
         'last_name',
         'full_name',
-        'id_number',
+        'address',
         'nationality',
         'date_of_birth',
-        'address',
-        'phone',
-        'email',
-        'branch_id',
     ];
-
+   
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -69,63 +70,74 @@ class User extends Authenticatable implements HasMedia, JWTSubject
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'date_of_birth' => 'date',
-
         ];
     }
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier(): mixed
-    {
-        return $this->getKey();
-    }
+
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
      * @return array
      */
-    public function getJWTCustomClaims(): array
-    {
-        return [];
-    }
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('avatar')
-            ->singleFile();
-    }
+    //start relationships
 
-    public function branches(): HasMany
-    {
-        return $this->hasMany(Branch::class, 'manager_id');
-    }
 
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
-
-    public function departments()
+    public function branches(): HasMany
     {
-        return $this->hasMany(Department::class, 'manager_id');
+        return $this->hasMany(Branch::class, 'manager_id');
     }
 
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id');
     }
-
-    public function tasks(): BelongsToMany
+    public function departments()
     {
-        return $this->belongsToMany(Task::class);
+        return $this->hasMany(Department::class, 'manager_id');
     }
+
+    public function career(): BelongsTo
+    {
+        return $this->belongsTo(Career::class, 'career_id');
+    }
+
+    public function careerApplications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function experiences(): HasMany
+    {
+        return $this->hasMany(Experience::class);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class);
+    }
+    public function tasks(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class);
     }
 
     public function shifts(): BelongsToMany
@@ -136,21 +148,31 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     public function missions(): BelongsToMany
     {
         return $this->belongsToMany(Mission::class, 'mission_user')
-            ->withTimestamps();
+                    ->withTimestamps();
     }
 
-    public function job(): BelongsTo
+   
+
+    //end relationships
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier(): mixed
     {
-        return $this->belongsTo(Career::class, 'job_id');
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 
-    public function jobApplications(): BelongsToMany
+    public function registerMediaCollections(): void
     {
-        return $this->belongsToMany(JobApplication::class);
+        $this->addMediaCollection('avatar')
+            ->singleFile();
     }
-
-    public function experiences(): HasMany
-    {
-        return $this->hasMany(Experience::class);
-    }
+    
 }

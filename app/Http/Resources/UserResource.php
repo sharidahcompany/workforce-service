@@ -14,36 +14,76 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id' => $this->id,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'id_number' => $this->id_number,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'name' => trim($this->first_name . ' ' . $this->last_name),
             'full_name' => $this->full_name,
-            'id_number' => $this->id_number,
             'address' => $this->address,
             'nationality' => $this->nationality,
             'date_of_birth' => $this->date_of_birth,
-            'phone' => $this->phone,
-            'email' => $this->email,
-            'job' => new CareerResource($this->whenLoaded('job')),
-            'branch_id' => $this->branch_id,
-
             'branch' => $this->whenLoaded('branch', function () {
-                return new BranchResource($this->branch);
+                return [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                ];
             }),
-
-            'departments' => $this->whenLoaded('departments', function () {
-                return DepartmentResource::collection($this->departments);
+            'department' => $this->whenLoaded('department', function () {
+                return [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                ];
             }),
-
+            'career' => $this->whenLoaded('career', function () {
+                return [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                ];
+            }),
+            'experiences' => ExperienceResource::collection($this->whenLoaded('experiences')),
             'avatar' => $this->getFirstMediaUrl('avatar'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
 
-            'experiences' => $this->whenLoaded('experiences', function () {
-                return ExperienceResource::collection($this->experiences);
-            }),
-            'created_at' => $this->created_at?->toDateTimeString(),
-            'updated_at' => $this->updated_at?->toDateTimeString(),
+
+
+
+
+            // 'id' => $this->id,
+            // 'email' => $this->email,
+            // 'phone' => $this->phone,
+            // 'id_number' => $this->id_number,
+            // 'first_name' => $this->first_name,
+            // 'last_name' => $this->last_name,
+            // 'full_name' => $this->full_name,
+            // 'address' => $this->address,
+            // 'nationality' => $this->nationality,
+            // 'date_of_birth' => $this->date_of_birth,
+
+            // 'name' => trim($this->first_name . ' ' . $this->last_name),
+            // 'job' => new CareerResource($this->whenLoaded('job')),
+            // 'branch_id' => $this->branch_id,
+
+            // 'branch' => $this->whenLoaded('branch', function () {
+            //     return new BranchResource($this->branch);
+            // }),
+
+            // 'departments' => $this->whenLoaded('departments', function () {
+            //     return DepartmentResource::collection($this->departments);
+            // }),
+
+            // 'experiences' => $this->whenLoaded('experiences', function () {
+            //     return ExperienceResource::collection($this->experiences);
+            // }),
+
+            // 'avatar' => $this->getFirstMediaUrl('avatar'),
+
+            // 'created_at' => $this->created_at?->toDateTimeString(),
+            // 'updated_at' => $this->updated_at?->toDateTimeString(),
         ];
     }
 }

@@ -15,23 +15,36 @@ return new class extends Migration
     {
         Schema::create('job_interviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('interviewer_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->enum('interview_type', array_map(fn($case) => $case->value, InterviewType::cases()));
-            $table->timestamp('scheduled_at');
+            $table->foreignId('parent_id')
+                  ->nullable()
+                  ->constrained('job_interviews')
+                  ->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                  ->nullable()  
+                  ->constrained('users')
+                  ->cascadeOnDelete();
+                  
+            $table->foreignId('interviewer_id')
+                   ->nullable()
+                   ->constrained('users')
+                   ->nullOnDelete();
+
+            $table->timestamp('scheduled_at')->nullable();
 
             $table->string('meeting_link')->nullable();
             $table->string('location')->nullable();
 
             $table->text('reschedule_reason')->nullable();
 
-            $table->integer('technical_score')->nullable();
-            $table->integer('communication_score')->nullable();
-            $table->integer('attitude_score')->nullable();
-            $table->integer('overall_score')->nullable();
+            // $table->integer('technical_score')->nullable();
+            // $table->integer('communication_score')->nullable();
+            // $table->integer('attitude_score')->nullable();
+            // $table->integer('overall_score')->nullable();
 
             $table->text('hr_notes')->nullable();
 
+            $table->enum('interview_type', array_map(fn($case) => $case->value, InterviewType::cases()));
             $table->enum('status', array_map(fn($case) => $case->value, InterviewStatus::cases()))->default('scheduled');
             $table->timestamps();
         });

@@ -11,27 +11,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class JobInterview extends Model
 {
     protected $fillable = [
+        'parent_id',
         'user_id',
         'interviewer_id',
-        'interview_type',
         'scheduled_at',
         'meeting_link',
         'location',
         'reschedule_reason',
-        'technical_score',
-        'communication_score',
-        'attitude_score',
-        'overall_score',
         'hr_notes',
+        'interview_type',
         'status',
     ];
 
-    protected $casts = [
-        'scheduled_at' => 'datetime',
-        'interview_type' => InterviewType::class,
-        'status' => InterviewStatus::class,
-    ];
 
+// start Relationship
+    public function parent(){
+        return $this->belongsTo(JobInterview::class,'parent_id','id');
+    }
+    public function children(){
+        return $this->hasMany(JobInterview::class,'parent_id','id');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -41,4 +40,16 @@ class JobInterview extends Model
     {
         return $this->belongsTo(User::class, 'interviewer_id');
     }
+// end Relationship
+
+    protected $casts = [
+        'parent_id'=>'integer',
+        'user_id'=>'integer',
+        'interviewer_id'=>'integer',
+        'scheduled_at' => 'datetime',
+        'interview_type' => InterviewType::class,
+        'status' => InterviewStatus::class,
+    ];
+
+
 }

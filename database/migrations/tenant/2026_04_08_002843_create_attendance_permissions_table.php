@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('reason')->nullable();
             $table->timestamp('start_datetime');
             $table->timestamp('end_datetime');
-            $table->enum('status',  MissionApprovalStatus::values())
-                ->default(MissionApprovalStatus::PENDING->value);
+            $table->enum('status',  ApprovalStatus::values())
+                ->default(ApprovalStatus::PENDING->value);
             $table->timestamps();
         });
     }

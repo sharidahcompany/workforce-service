@@ -28,6 +28,8 @@ class ExperienceController extends Controller
 
     public function store(ExperienceRequest $request): JsonResponse
     {
+        
+
         $validated = $request->validated();
         $userId = $validated['user_id'];
         $experiences = $validated['experiences'];
@@ -57,7 +59,7 @@ class ExperienceController extends Controller
             }
 
             return response()->json([
-                'message' => trans('crud.updated'),
+                'message' => trans('crud.created'),
                 'data' => ExperienceResource::collection($processedExperiences),
             ], 200);
         });

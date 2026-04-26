@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteRequest;
 use App\Http\Requests\JobInterviewRequest;
+use App\Http\Requests\JobInterviewRescheduleRequest;
 use App\Http\Resources\JobInterviewResource;
+use App\Models\Tenant\JobApplication;
 use App\Models\Tenant\JobInterview;
 use App\Services\QueryBuilderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class JobInterviewController extends Controller
@@ -17,6 +20,7 @@ class JobInterviewController extends Controller
     public function index(Request $request): JsonResponse
     {
         $interviews = JobInterview::query()->with([
+            'children',
             'user',
             'interviewer',
         ]);
@@ -32,6 +36,7 @@ class JobInterviewController extends Controller
     {
         $interview = JobInterview::create($request->validated());
         $interview->load([
+            'children',
             'user',
             'interviewer',
         ]);
@@ -45,6 +50,7 @@ class JobInterviewController extends Controller
     public function show(string $id): JsonResponse
     {
         $interview = JobInterview::with([
+            'children',
             'user',
             'interviewer',
         ])->findOrFail($id);
@@ -59,6 +65,7 @@ class JobInterviewController extends Controller
         $interview = JobInterview::findOrFail($id);
         $interview->update($request->validated());
         $interview->load([
+            'children',
             'user',
             'interviewer',
         ]);
@@ -69,6 +76,23 @@ class JobInterviewController extends Controller
         ]);
     }
 
+    public function interviewReschedule(JobInterviewRescheduleRequest $request,$id){
+
+        $findInterview = JobInterview::findOrFail($id);
+        $data = $findInterview->toArray();
+        unset($data['id'], $data['created_at'], $data['updated_at']);
+
+        $data['parent_id'] = $findInterview->id;
+        $data['scheduled_at'] = $request->validated('scheduled_at');
+        $data['reschedule_reason'] = $request->validated('reschedule_reason');
+        $data['status'] = 'rescheduled'; 
+
+        $interview = JobInterview::create($data);
+        return response()->json([
+            'message' => trans('crud.reschedule'),
+            'data' => new JobInterviewResource($interview),
+        ]);
+    }
     public function destroy(DeleteRequest $request): JsonResponse
     {
         JobInterview::whereIn('id', $request->ids)->delete();
@@ -77,4 +101,8 @@ class JobInterviewController extends Controller
             'message' => trans('crud.deleted'),
         ]);
     }
+
+    
+
+   
 }

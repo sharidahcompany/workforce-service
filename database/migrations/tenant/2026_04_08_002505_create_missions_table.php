@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use App\Enums\MissionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,8 +26,8 @@ return new class extends Migration
             $table->decimal('expense_amount', 15, 2)->default(0);
             $table->enum('status',  MissionStatus::values())
                 ->default(MissionStatus::PENDING->value);
-            $table->enum('approval_status',  MissionApprovalStatus::values())
-                ->default(MissionApprovalStatus::PENDING->value);
+            $table->enum('approval_status',  ApprovalStatus::values())
+                ->default(ApprovalStatus::PENDING->value);
             $table->timestamps();
         });
     }

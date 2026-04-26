@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\CareerStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CareerRequest extends FormRequest
 {
@@ -22,7 +24,18 @@ class CareerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'department_id'=>['required','exists:departments,id'],
+            'name' => ['required', 'array'],
+            'name.*' => ['required','string','max:255'],
+            'description' => ['required', 'array'],
+            'description.*' => ['required','string','max:255'],
+            'benefits' => ['nullable', 'array'],
+            'benefits.*' => ['required','integer','exists:benefits,id'],
+            'status'=>[
+                'nullable', 
+                    Rule::in(array_map(fn(CareerStatus $case) => $case->value, CareerStatus::cases())),
+            ],
+            'cover' =>['nullable','image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

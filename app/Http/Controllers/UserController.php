@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::query()->with('branch', 'branches', 'departments', 'job');
+        $users = User::query()->with('branch','department','career','experiences');
 
         $result = $this->queryBuilder->applyQuery($request, $users);
 
@@ -27,7 +27,6 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = User::create($request->validated());
-
         if ($request->hasFile('avatar')) {
             $user->addMediaFromRequest('avatar')->toMediaCollection('avatar');
         }
@@ -40,7 +39,7 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        $user = User::with('branch', 'job', 'experiences')->find($id);
+        $user = User::with('branch','department','career','experiences')->find($id);
 
         return response()->json(['data' => new UserResource($user)], 200);
     }
@@ -48,7 +47,6 @@ class UserController extends Controller
     public function update(UserRequest $request, string $id)
     {
         $user = User::findOrFail($id);
-
         $user->update($request->validated());
 
         if ($request->hasFile('avatar')) {
