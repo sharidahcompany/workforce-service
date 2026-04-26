@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AttendancePermissionRequest extends FormRequest
@@ -24,7 +24,7 @@ class AttendancePermissionRequest extends FormRequest
             'reason' => ['nullable', 'string'],
             'start_datetime' => [$isPost ? 'required' : 'sometimes', 'date'],
             'end_datetime' => [$isPost ? 'required' : 'sometimes', 'date', 'after_or_equal:start_datetime'],
-            'status' => ['nullable', 'in:' . implode(',', MissionApprovalStatus::values())],
+            'status' => ['nullable', 'in:' . implode(',', ApprovalStatus::values())],
         ];
     }
 
@@ -32,7 +32,7 @@ class AttendancePermissionRequest extends FormRequest
     {
         $this->merge([
             'deduct_from_balance' => $this->deduct_from_balance ?? false,
-            'status' => $this->status ?? MissionApprovalStatus::PENDING->value,
+            'status' => $this->status ?? ApprovalStatus::PENDING->value,
         ]);
     }
 }

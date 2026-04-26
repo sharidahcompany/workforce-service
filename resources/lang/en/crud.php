@@ -9,5 +9,8 @@ return [
     'delete.error' => 'Unable to delete some data.',
     'not_found' => 'Data not found.',
     "delete.hq.error" => "Headquarter cannot be deleted",
-    "delete.owner.error" => "Owner cannot be deleted"
+    "delete.owner.error" => "Owner cannot be deleted",
+    'reschedule'=>' Interview rescheduled successfully!',
+    'accepted' =>'Accepted Successfully!',
+    'request_sent'=>'Request Sent Successfully!',
 ];

@@ -14,9 +14,9 @@ class CareerController extends Controller
      */
     public function index()
     {
-        $Career = Career::all();
+        $careers = Career::all();
 
-        return response()->json(['data' => CareerResource::collection($Career)]);
+        return response()->json(['data' => CareerResource::collection($careers)]);
     }
 
     /**
@@ -24,12 +24,19 @@ class CareerController extends Controller
      */
     public function store(CareerRequest $request)
     {
+        
         $validated = $request->validated();
 
-        $Career = Career::create($validated);
+        $career = Career::create($validated);
+        if ($request->hasFile('cover')) {
+            $career->addMediaFromRequest('cover')->toMediaCollection('career');
+        }
+        if ($request->has('benefits')) {
+            $career->benefits()->sync($request->benefits);
+        }
 
         return response()->json([
-            'data' => new CareerResource($Career),
+            'data' => new CareerResource($career),
             'message' => trans('crud.created'),
         ], 201);
     }
@@ -39,9 +46,9 @@ class CareerController extends Controller
      */
     public function show(string $id)
     {
-        $Career = Career::findOrFail($id);
+        $career = Career::findOrFail($id);
 
-        return response()->json(['data' => new CareerResource($Career)], 200);
+        return response()->json(['data' => new CareerResource($career)], 200);
     }
 
     /**
@@ -49,12 +56,18 @@ class CareerController extends Controller
      */
     public function update(CareerRequest $request, string $id)
     {
-        $Career = Career::findOrFail($id);
+        $career = Career::findOrFail($id);
 
-        $Career->update($request->validated());
-
+        $career->update($request->validated());
+        if ($request->hasFile('cover')) {
+            $career->clearMediaCollection('cover');
+            $career->addMediaFromRequest('cover')->toMediaCollection('career');
+        }
+        if ($request->has('benefits')) {
+            $career->benefits()->sync($request->benefits);
+        }
         return response()->json([
-            'data' => new CareerResource($Career),
+            'data' => new CareerResource($career),
             'message' => trans('crud.updated'),
         ], 200);
     }

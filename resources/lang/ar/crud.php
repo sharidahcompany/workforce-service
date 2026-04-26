@@ -9,5 +9,8 @@ return [
     'delete.error' => 'تعذر حذف بعض البيانات.',
     'not_found' => 'البيانات غير موجودة.',
     "delete.hq.error" => "لا يمكن حذف المركز الرئيسي",
-    "delete.owner.error" => "لا يمكن حذف المالك"
+    "delete.owner.error" => "لا يمكن حذف المالك",
+    'reschedule'=>'تم اععادة الجدولة بنجاح',
+    'accepted' =>'تمت الموافقة بنجاح',
+    'request_sent' =>'تم إرسال الطلب بنجاح',
 ];

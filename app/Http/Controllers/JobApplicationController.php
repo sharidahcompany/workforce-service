@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteRequest;
+use App\Http\Requests\JobApplicationRecommendedByRequest;
 use App\Http\Requests\JobApplicationRequest;
 use App\Http\Resources\JobApplicationResource;
 use App\Models\Tenant\JobApplication;
@@ -18,7 +19,8 @@ class JobApplicationController extends Controller
     public function index(Request $request): JsonResponse
     {
         $jobApplications = JobApplication::query()->with([
-            'jobPost',
+            'recommendeder',
+            'careerPost',
             'user',
 
         ]);
@@ -30,16 +32,18 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function store(JobApplicationRequest $request): JsonResponse
+    public function store(JobApplicationRequest $request)
     {
+        if ($request->hasFile('file')) {
+            return 'gfd';
+            $jobApplication->addMediaFromRequest('file')->toMediaCollection('cv');
+        }
         $data = $request->validated();
         $data['user_id'] = Auth::id();
         $jobApplication = JobApplication::create($data);
-        $jobApplication->load(['jobPost', 'user']);
+        $jobApplication->load(['careerPost', 'user']);
 
-        if ($request->hasFile('file')) {
-            $jobApplication->addMediaFromRequest('file')->toMediaCollection('cv');
-        }
+      
 
         return response()->json([
             'message' => trans('crud.created'),
@@ -50,9 +54,9 @@ class JobApplicationController extends Controller
     public function show(string $id): JsonResponse
     {
         $jobApplication = JobApplication::with([
-            'jobPost',
+            'recommendeder',
+            'careerPost',
             'user',
-
         ])->findOrFail($id);
 
         return response()->json([
@@ -64,7 +68,7 @@ class JobApplicationController extends Controller
     {
         $jobApplication = JobApplication::findOrFail($id);
         $jobApplication->update($request->validated());
-        $jobApplication->load(['jobPost', 'user']);
+        $jobApplication->load(['recommendeder','careerPost', 'user']);
 
         if ($request->hasFile('file')) {
             $jobApplication->addMediaFromRequest('file')->toMediaCollection('cv');
@@ -88,4 +92,28 @@ class JobApplicationController extends Controller
             'message' => trans('crud.deleted'),
         ]);
     }
+
+    public function jobApplicationAccepted($id){
+        $jobApplication = JobApplication::find($id);
+        $jobApplication->update([
+            'accepted_by'=>Auth::id(),
+            'status'=>'waiting',
+        ]);
+        return response()->json([
+            'message' => trans('crud.request_sent'),
+            'data' => new JobApplicationResource($jobApplication),
+        ]);
+    }
+    public function jobApplicationConfirmed($id){
+        $jobApplication = JobApplication::find($id);
+        $jobApplication->update([
+            'accepted_by'=>Auth::id(),
+            'status'=>'accepted',
+        ]);
+        return response()->json([
+            'message' => trans('crud.accepted'),
+            'data' => new JobApplicationResource($jobApplication),
+        ]);
+    }
+    
 }

@@ -14,15 +14,14 @@ class AuthenticateTenantJwt
         try {
 
             $token = $request->bearerToken();
-
             if (!$token) {
                 return response()->json([
                     'message' => 'Unauthenticated.',
                 ], 401);
             }
-
+            
             $user = JWTAuth::setToken($token)->authenticate();
-
+         
             if (!$user) {
                 return response()->json([
                     'message' => 'd.',
@@ -38,5 +37,6 @@ class AuthenticateTenantJwt
                 'error' => $e->getMessage(),
             ], 401);
         }
+        
     }
 }

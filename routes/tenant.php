@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\AnnualVacationController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendancePermissionController;
+use App\Http\Controllers\BenefitController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BuffetController;
 use App\Http\Controllers\BuffetItemController;
@@ -17,7 +18,8 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobInterviewController;
-use App\Http\Controllers\JobPostController;
+use App\Http\Controllers\CareerPostController;
+use App\Http\Controllers\JobOfferController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
@@ -38,6 +40,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocaleFromHeader::class])->group(function () {
 
     Route::middleware('tenant.jwt')->group(function () {
+        
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Organization Sturcture
         Route::delete('visions', [VisionController::class, 'destroy']);
         Route::apiResource('visions', VisionController::class);
@@ -50,22 +54,39 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
         Route::delete('departments', [DepartmentController::class, 'destroy']);
         Route::apiResource('departments', DepartmentController::class);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // HR
-        Route::delete('employees', [UserController::class, 'destroy']);
-        Route::apiResource('employees', UserController::class);
+        Route::delete('users', [UserController::class, 'destroy']);
+        Route::post('users/update/{employee}', [UserController::class, 'update']);
+        Route::apiResource('users', UserController::class);
 
-        Route::delete('jobs', [CareerController::class, 'destroy']);
-        Route::apiResource('jobs', CareerController::class);
+        Route::delete('careers', [CareerController::class, 'destroy']);
+        Route::post('careers/update/{job}', [CareerController::class, 'update']);
+        Route::apiResource('careers', CareerController::class);
 
-        Route::delete('job-posts', [JobPostController::class, 'destroy']);
-        Route::apiResource('job-posts', JobPostController::class);
+        Route::delete('benefits', [BenefitController::class, 'destroy']);
+        Route::apiResource('benefits', BenefitController::class);
 
+        Route::delete('career-posts', [CareerPostController::class, 'destroy']);
+        Route::apiResource('career-posts', CareerPostController::class);
+
+        Route::put('job-applications/accept/{jobapplication}',[JobApplicationController::class,'jobApplicationAccepted']);
+        Route::put('job-applications/confirme/{jobapplication}',[JobApplicationController::class,'jobApplicationConfirmed']);
         Route::delete('job-applications', [JobApplicationController::class, 'destroy']);
         Route::apiResource('job-applications', JobApplicationController::class);
 
-        Route::delete('interviews', [JobInterviewController::class, 'destroy']);
-        Route::apiResource('interviews', JobInterviewController::class);
+        Route::delete('job-interviews', [JobInterviewController::class, 'destroy']);
+        Route::post('job-interviews/reschedule/{interview}', [JobInterviewController::class, 'interviewReschedule']);
+        Route::apiResource('job-interviews', JobInterviewController::class);
+
+
+        Route::delete('job-offers', [JobOfferController::class, 'destroy']);
+        Route::apiResource('job-offers', JobOfferController::class);
+
 
         Route::delete('shifts', [ShiftController::class, 'destroy']);
         Route::post('shifts/{id}/assign-users', [ShiftController::class, 'assignUsers']);
@@ -98,7 +119,10 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
         Route::delete('experiences', [ExperienceController::class, 'destroy']);
         Route::apiResource('experiences', ExperienceController::class);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Project Management
         Route::delete('projects', [ProjectController::class, 'destroy']);
         Route::post('projects/{project}/users', [ProjectUserController::class, 'store']);
@@ -135,7 +159,10 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
         Route::delete('ratings', [RatingController::class, 'destroy']);
         Route::apiResource('ratings', RatingController::class);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Buffet
         Route::delete('buffets', [BuffetController::class, 'destroy']);
         Route::apiResource('buffets', BuffetController::class);
@@ -145,5 +172,6 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
         Route::delete('buffet-orders', [BuffetOrderController::class, 'destroy']);
         Route::apiResource('buffet-orders', BuffetOrderController::class);
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     });
 });

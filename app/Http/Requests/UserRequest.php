@@ -22,19 +22,22 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user')?->id ?? $this->route('user');
-
+        $userId = $this->route('employee')?->id ?? $this->route('employee');
+   
         return [
+            'branch_id'=>['nullable','exists:branches,id'],
+            'department_id'=>['nullable','exists:departments,id'],
+            'career_id'=>['nullable','exists:careers,id'],
+
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
+            'phone' => ['required', 'string', 'max:50','unique:users,phone,' . $userId],
+            'id_number' => ['nullable', 'string', 'max:255','unique:users,id_number,' . $userId],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
             'full_name' => ['nullable', 'string', 'max:255'],
-            'id_number' => ['nullable', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
             'nationality' => ['nullable', 'string', 'max:255'],
             'date_of_birth' => ['nullable', 'date'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }

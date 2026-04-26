@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('department_id')
-                ->nullable()
-                ->after('branch_id')
-                ->constrained('departments')
-                ->nullOnDelete();
+        Schema::create('benefits', function (Blueprint $table) {
+            $table->id();
+            $table->json('name');
+            $table->json('description');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('benefits');
     }
 };

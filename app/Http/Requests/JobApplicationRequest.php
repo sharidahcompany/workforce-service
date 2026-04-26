@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\JobApplicationStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,13 +18,11 @@ class JobApplicationRequest extends FormRequest
 
     public function rules(): array
     {
-        $isPost = $this->isMethod('post');
 
         return [
-            'job_post_id' => ['nullable', 'integer', 'exists:job_posts,id'],
-            'user_id' => [$isPost ? 'required' : 'sometimes', 'integer', 'exists:users,id'],
-            'status' => ['nullable', Rule::in(['pending', 'accepted', 'rejected'])],
-            'file' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'career_post_id' => ['nullable', 'integer', 'exists:career_posts,id'],
+            'status' => ['nullable', Rule::in(array_map(fn(JobApplicationStatus $case) => $case->value, JobApplicationStatus::cases())),],
+            'file' => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
         ];
     }
 }

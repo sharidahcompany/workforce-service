@@ -42,11 +42,18 @@ class CreateUser
         $user['branch_id'] = $branch->id;
         $user->save();
 
-        $job = Career::create([
-            'title' => 'الرئيس'
+        $career = Career::create([
+            'name' => [
+                'ar'=>'الرئيس',
+                'en'=>'CEO',
+            ],
+            'description'=>[
+                'ar'=>'الرئيس',
+                'en'=>'CEO',
+            ],
         ]);
 
-        $user['job_id'] = $job->id;
+        $user['career_id'] = $career->id;
         $user->save();
         }
     }
