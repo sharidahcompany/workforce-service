@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2)->nullable();
             $table->decimal('discount_percentage', 8, 2)->nullable();
             $table->string('duration')->nullable();
-            $table->enum('status', array_column(MissionApprovalStatus::cases(), 'value'));
+            $table->enum('status', array_column(ApprovalStatus::cases(), 'value'));
             $table->timestamps();
         });
     }

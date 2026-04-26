@@ -43,7 +43,9 @@ class DepartmentResource extends JsonResource
 
             'children' => DepartmentResource::collection($this->whenLoaded('childrenRecursive')),
 
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+
         ];
     }
 }

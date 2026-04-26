@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->timestamps();
+        Schema::table('branches', function (Blueprint $table) {
+            $table->foreignId('manager_id')->nullable()->constrained('users')->nullOnDelete();
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_posts');
+        Schema::table('branches', function (Blueprint $table) {
+            $table->dropColumn('manager_id');
+        });
     }
 };

@@ -2,15 +2,38 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\CareerStatus;
 use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Career extends Model
+
+class Career extends Model  implements HasMedia
 {
-    protected $fillable = ['title'];
+    use InteractsWithMedia;
+    protected $fillable = ['department_id','name','description','status'];
+    
 
-    public function users()
+    // start Relationship
+        public function department(){
+            return $this->belongsTo(Department::class,'department_id','id');
+        }
+        public function benefits(){
+            return $this->belongsToMany(Benefit::class);
+        }
+    // end Relationship
+
+    protected $casts =[
+        'department_id'=>'integer',
+        'name' => 'array',
+        'description' => 'array',
+        'status'=>CareerStatus::class,
+    ];
+
+    public function registerMediaCollections(): void
     {
-        return $this->hasMany(User::class);
+        $this->addMediaCollection('career')->singleFile();
     }
+
 }

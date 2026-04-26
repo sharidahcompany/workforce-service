@@ -2,7 +2,7 @@
 
 namespace App\Models\Tenant;
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use App\Enums\MissionStatus;
 use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +34,7 @@ class Mission extends Model
         'actual_end_datetime' => 'datetime',
         'expense_amount' => 'decimal:2',
         'status' => MissionStatus::class,
-        'approval_status' => MissionApprovalStatus::class,
+        'approval_status' => ApprovalStatus::class,
     ];
 
     public function approvedBy(): BelongsTo

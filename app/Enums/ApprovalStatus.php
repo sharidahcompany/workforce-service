@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum MissionApprovalStatus: string
+enum ApprovalStatus: string
 {
     case PENDING = 'pending';
     case APPROVED = 'approved';
@@ -11,9 +11,9 @@ enum MissionApprovalStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::PENDING => trans('mission_approval_status.pending'),
-            self::APPROVED => trans('mission_approval_status.approved'),
-            self::REJECTED => trans('mission_approval_status.rejected'),
+            self::PENDING => trans('approval_status.pending'),
+            self::APPROVED => trans('approval_status.approved'),
+            self::REJECTED => trans('approval_status.rejected'),
         };
     }
 

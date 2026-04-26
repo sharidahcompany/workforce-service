@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MissionApprovalStatus;
+use App\Enums\ApprovalStatus;
 use App\Enums\MissionStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -31,7 +31,7 @@ class MissionRequest extends FormRequest
             'assignee_ids.*' => ['integer', 'exists:users,id', 'distinct'],
 
             'status' => ['nullable', 'in:' . implode(',', MissionStatus::values())],
-            'approval_status' => ['nullable', 'in:' . implode(',', MissionApprovalStatus::values())],
+            'approval_status' => ['nullable', 'in:' . implode(',', ApprovalStatus::values())],
         ];
     }
 
@@ -41,7 +41,7 @@ class MissionRequest extends FormRequest
             'expense_amount' => $this->expense_amount ?? 0,
             'assignee_ids' => $this->assignee_ids ?? [],
             'status' => $this->status ?? MissionStatus::PENDING->value,
-            'approval_status' => $this->approval_status ?? MissionApprovalStatus::PENDING->value,
+            'approval_status' => $this->approval_status ?? ApprovalStatus::PENDING->value,
         ]);
     }
 }
