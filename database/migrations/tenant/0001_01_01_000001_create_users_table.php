@@ -18,6 +18,16 @@ return new class extends Migration
                   ->constrained('branches')
                   ->cascadeOnDelete();
 
+            $table->foreignId('department_id')
+                  ->nullable()
+                  ->constrained('departments')
+                  ->cascadeOnDelete();
+
+           $table->foreignId('career_id')
+                  ->nullable()
+                  ->constrained('careers')
+                  ->cascadeOnDelete();
+
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('id_number')->nullable();

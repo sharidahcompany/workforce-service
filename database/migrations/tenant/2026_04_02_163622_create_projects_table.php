@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectManagment\ProjectStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,8 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->text('notes')->nullable();
+            $table->enum('status', ProjectStatus::values())
+                ->default(ProjectStatus::PENDING->value);
             $table->timestamps();
         });
     }
