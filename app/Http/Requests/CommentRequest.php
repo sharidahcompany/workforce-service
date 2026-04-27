@@ -12,7 +12,7 @@ class CommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,12 @@ class CommentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $requiredOrSometimes = request('comment') ? 'sometimes' : 'required';
         return [
-            //
-        ];
+            'user_id'=>[$requiredOrSometimes,'integer','exists:users,id'],
+            'body' =>['nullable','string'],
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpg,jpeg,png,pdf,docx,zip|max:5120',        
+];
     }
 }

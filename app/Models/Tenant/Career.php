@@ -9,7 +9,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 
-class Career extends Model  implements HasMedia
+class Career extends Model implements HasMedia
 {
     use InteractsWithMedia;
     protected $fillable = ['department_id','name','description','status'];

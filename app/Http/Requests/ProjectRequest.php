@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProjectManagment\ProjectStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProjectRequest extends FormRequest
 {
@@ -24,6 +26,7 @@ class ProjectRequest extends FormRequest
             'start_date' => [$requiredOrSometimes, 'date'],
             'end_date' => [$requiredOrSometimes, 'date', 'after_or_equal:start_date'],
             'notes' => ['nullable', 'string'],
+            'status'=>['nullable',Rule::in(array_map(fn(ProjectStatus $case) => $case->value, ProjectStatus::cases()))],
         ];
     }
 }
