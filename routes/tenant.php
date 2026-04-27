@@ -155,6 +155,8 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
             Route::post('rates', [RatingController::class, 'storeTask']);
         });
 
+        Route::delete('comments', [CommentController::class, 'destroy']);
+        Route::post('comments/{comment}', [CommentController::class, 'update']);
         Route::apiResource('comments', CommentController::class);
 
         Route::delete('ratings', [RatingController::class, 'destroy']);

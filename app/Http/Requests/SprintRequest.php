@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProjectManagment\SprintStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SprintRequest extends FormRequest
 {
@@ -23,6 +25,7 @@ class SprintRequest extends FormRequest
             'name' => [$requiredOrSometimes, 'string', 'max:255'],
             'start_date' => [$requiredOrSometimes, 'date'],
             'end_date' => [$requiredOrSometimes, 'date', 'after_or_equal:start_date'],
+            'status'=>['nullable',Rule::in(array_map(fn(SprintStatus $case) => $case->value, SprintStatus::cases()))],
         ];
     }
 }
