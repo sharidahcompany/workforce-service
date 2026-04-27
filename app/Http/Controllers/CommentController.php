@@ -2,64 +2,63 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
+use App\Http\Requests\DeleteRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Tenant\Comment;
+use App\Models\Tenant\Task;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    
+  
+    public function storeTask(CommentRequest $request,$task)
     {
-        //
+
+
+        $task = Task::find($task);
+        $comment = $task->comments()->create($request->validated());
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $comment->addMedia($file)->toMediaCollection('attachment');
+            }
+        }
+        return response()->json([
+            'message' => trans('crud.created'),
+            'data' => new CommentResource($comment),
+        ], 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(CommentRequest $request, $id)
     {
-        //
+        $comment = Comment::with('media')->find($id);
+        $comment->update($request->validated());
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $comment->clearMediaCollection('attachment');
+                $comment->addMedia($file)->toMediaCollection('attachment');
+            }
+        }
+        return response()->json([
+            'data' => new CommentResource($comment),
+            'message' => trans('crud.updated'),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(DeleteRequest $request)
     {
-        //
+        Comment::whereIn('id', $request->ids)->delete();
+        return response()->json([
+            'message' => trans('crud.deleted'),
+        ]);
     }
 }

@@ -69,7 +69,7 @@ class CareerController extends Controller
         return response()->json([
             'data' => new CareerResource($career),
             'message' => trans('crud.updated'),
-        ], 200);
+        ]);
     }
 
     /**
