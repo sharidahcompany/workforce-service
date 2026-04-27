@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\ProjectManagment\ProjectStatus;
 use App\Models\Tenant\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,11 +19,13 @@ class Project extends Model implements HasMedia
         'start_date',
         'end_date',
         'notes',
+        'status',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'status' =>ProjectStatus::class,
     ];
 
     public function sprints()
