@@ -48,7 +48,7 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         'nationality',
         'date_of_birth',
     ];
-   
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -117,20 +117,6 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         return $this->hasMany(Experience::class);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class);
@@ -148,10 +134,10 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     public function missions(): BelongsToMany
     {
         return $this->belongsToMany(Mission::class, 'mission_user')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
-   
+
 
     //end relationships
 
@@ -174,5 +160,4 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         $this->addMediaCollection('avatar')
             ->singleFile();
     }
-    
 }
