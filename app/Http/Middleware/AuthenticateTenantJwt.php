@@ -19,12 +19,12 @@ class AuthenticateTenantJwt
                     'message' => 'Unauthenticated.',
                 ], 401);
             }
-            
+
             $user = JWTAuth::setToken($token)->authenticate();
-         
+
             if (!$user) {
                 return response()->json([
-                    'message' => 'd.',
+                    'message' => 'User not found.',
                 ], 401);
             }
 
@@ -37,6 +37,5 @@ class AuthenticateTenantJwt
                 'error' => $e->getMessage(),
             ], 401);
         }
-        
     }
 }
