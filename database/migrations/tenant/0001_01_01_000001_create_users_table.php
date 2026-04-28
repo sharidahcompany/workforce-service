@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->uuid('external_id')->unique();
             $table->foreignId('branch_id')
-                  ->nullable()
-                  ->constrained('branches')
-                  ->cascadeOnDelete();
+                ->nullable()
+                ->constrained('branches')
+                ->cascadeOnDelete();
 
             $table->string('email')->unique();
             $table->string('phone')->unique();

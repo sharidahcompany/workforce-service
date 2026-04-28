@@ -35,6 +35,7 @@ class User extends Authenticatable implements HasMedia, JWTSubject
      * @var list<string>
      */
     protected $fillable = [
+        'external_id',
         'branch_id',
         'department_id',
         'career_id',
@@ -148,11 +149,16 @@ class User extends Authenticatable implements HasMedia, JWTSubject
      */
     public function getJWTIdentifier(): mixed
     {
-        return $this->getKey();
+        return $this->external_id;
     }
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'external_id';
     }
 
     public function registerMediaCollections(): void
